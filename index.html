@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title of the document</title>
+    <style>
+      .table {
+        display: table;
+        width: 100%;
+      }
+      .cell {
+        display: table-cell;
+        border: 1px solid black;
+        width: 20%;
+        height: 100px;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      fetch("http://localhost:8080/getData")
+        .then((response) => response.json())
+        .then((commits) => {
+          let html = `<table>
+                    <tr>
+                      <th>Organization</th>
+                      <th>Department</th>
+                      <th>UserName</th>
+                      <th>Date</th>
+                      <th>Time</th>
+                    </tr>`;
+          commits.forEach((element) => {});
+          console.log(commits);
+        });
+    </script>
+    <h2>SERVICE DATA</h2>
+    <div id="showList"></div>
+    <div class="table">
+      <div class="cell">Cell C</div>
+      <div class="cell">Cell C</div>
+      <div class="cell">
+        <div class="table">
+          <div class="cell">Cell A</div>
+        </div>
+        <div class="table">
+          <div class="cell">Cell B</div>
+        </div>
+      </div>
+      <div class="cell">
+        <div class="table">
+          <div class="cell">Cell A</div>
+        </div>
+        <div class="table">
+          <div class="cell">Cell B</div>
+        </div>
+      </div>
+    </div>
+    <div class="table">
+      <div class="cell">Cell C</div>
+      <div class="cell">
+        <div class="table">
+          <div class="cell">Cell A</div>
+        </div>
+        <div class="table">
+          <div class="cell">Cell B</div>
+        </div>
+      </div>
+      <div class="cell">
+        <div class="table">
+          <div class="cell">Cell A1</div>
+        </div>
+        <div class="table">
+          <div class="cell">Cell B1</div>
+        </div>
+      </div>
+      <div class="cell">
+        <div class="table">
+          <div class="cell">Cell A2</div>
+        </div>
+        <div class="table">
+          <div class="cell">Cell B2</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
