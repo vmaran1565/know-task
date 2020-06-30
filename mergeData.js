@@ -31,3 +31,5 @@ const mergeDataFn = (data) => {
   }, {});
   return mergeData;
 };
+
+console.log(mergeDataFn(overAllData));
