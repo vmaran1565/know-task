@@ -27,7 +27,10 @@ app.listen(process.env.PORT || 8080, function () {
 
 app.get("/getData", function (req, res) {
   const output = mergeDataFn(serviceData.data);
-  sendJsonResult(res, output);
+  sendJsonResult(res, {
+    output: output,
+    config: mergeColumns,
+  });
 });
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
@@ -48,17 +51,5 @@ const mergeDataFn = (data) => {
   data = data.map((el) => {
     return (el = applyConfigFn(el));
   });
-  const mergeData = data.reduce((reducer, object) => {
-    mergeColumns
-      .reduce(
-        (mergeColumn, key, i, { length }) =>
-          (mergeColumn[object[key]] =
-            mergeColumn[object[key]] || (i + 1 === length ? [] : {})),
-        reducer
-      )
-      .push(object);
-
-    return reducer;
-  }, {});
-  return mergeData;
+  return data;
 };
