@@ -1,87 +1,82 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Title of the document</title>
+    <title>Merge Data</title>
+    <script src="/jquery.js"></script>
     <style>
-      .table {
-        display: table;
+      table {
         width: 100%;
       }
-      .cell {
-        display: table-cell;
+      table,
+      th,
+      td {
         border: 1px solid black;
-        width: 20%;
-        height: 100px;
-        vertical-align: middle;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 5px;
+        text-align: left;
       }
     </style>
   </head>
 
   <body>
     <script>
+      function mergeRows(table, config) {
+        var firstColumnBrakes = [];
+        for (var i = 1; i <= table.find("th").length; i++) {
+          if (!config.includes(table.find("th:nth-child(" + i + ")").text())) {
+            continue;
+          }
+          var previous = null,
+            cellToExtend = null,
+            rowspan = 1;
+          table.find("td:nth-child(" + i + ")").each(function (index, e) {
+            var jthis = $(this),
+              content = jthis.text();
+            if (
+              previous == content &&
+              content !== "" &&
+              $.inArray(index, firstColumnBrakes) === -1
+            ) {
+              jthis.addClass("hidden");
+              cellToExtend.attr("rowspan", (rowspan = rowspan + 1));
+            } else {
+              if (i === 1) firstColumnBrakes.push(index);
+              rowspan = 1;
+              previous = content;
+              cellToExtend = jthis;
+            }
+          });
+        }
+        $("td.hidden").remove();
+      }
       fetch("http://localhost:8080/getData")
         .then((response) => response.json())
         .then((commits) => {
-          let html = `<table>
-                    <tr>
-                      <th>Organization</th>
-                      <th>Department</th>
-                      <th>UserName</th>
-                      <th>Date</th>
-                      <th>Time</th>
-                    </tr>`;
-          commits.forEach((element) => {});
-          console.log(commits);
+          $("showList").hide();
+          let html = ` <table>
+                        <tr>
+                          <th>Organization</th>
+                          <th>Department</th>
+                          <th>UserName</th>
+                          <th>Date</th>
+                          <th>Time</th>
+                        </tr>`;
+          commits.output.forEach((el, index) => {
+            html += `<tr><td>${el.Organization}</td>
+                      <td>${el.Department}</td>
+                      <td>${el.UserName}</td>
+                      <td>${el.Date}</td>
+                      <td>${el.Time}</td></tr>`;
+          });
+          html + `</table>`;
+          document.getElementById("showList").innerHTML = html;
+          mergeRows($("table"), commits.config);
         });
     </script>
     <h2>SERVICE DATA</h2>
     <div id="showList"></div>
-    <div class="table">
-      <div class="cell">Cell C</div>
-      <div class="cell">Cell C</div>
-      <div class="cell">
-        <div class="table">
-          <div class="cell">Cell A</div>
-        </div>
-        <div class="table">
-          <div class="cell">Cell B</div>
-        </div>
-      </div>
-      <div class="cell">
-        <div class="table">
-          <div class="cell">Cell A</div>
-        </div>
-        <div class="table">
-          <div class="cell">Cell B</div>
-        </div>
-      </div>
-    </div>
-    <div class="table">
-      <div class="cell">Cell C</div>
-      <div class="cell">
-        <div class="table">
-          <div class="cell">Cell A</div>
-        </div>
-        <div class="table">
-          <div class="cell">Cell B</div>
-        </div>
-      </div>
-      <div class="cell">
-        <div class="table">
-          <div class="cell">Cell A1</div>
-        </div>
-        <div class="table">
-          <div class="cell">Cell B1</div>
-        </div>
-      </div>
-      <div class="cell">
-        <div class="table">
-          <div class="cell">Cell A2</div>
-        </div>
-        <div class="table">
-          <div class="cell">Cell B2</div>
-        </div>
-      </div>
-    </div>
   </body>
 </html>
